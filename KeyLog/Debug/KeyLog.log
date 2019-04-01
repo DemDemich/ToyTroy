@@ -1,0 +1,3 @@
+﻿  KeyLog.cpp
+c:\program files (x86)\labs\3_2sem\keylog\keylog\keylog.cpp(63): warning C4566: character represented by universal-character-name '\u00BE' cannot be represented in the current code page (1251)
+  KeyLog.vcxproj -> C:\Program Files (x86)\Labs\3_2sem\KeyLog\Debug\KeyLog.exe
