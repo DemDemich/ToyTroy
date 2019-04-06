@@ -1,2 +1,7 @@
 import keyboard as kb
-print(123)
+import time as t
+f = open('lul.txt','a+')
+def write_into_file(rec):
+    f.write(rec.name)
+    f.close
+
