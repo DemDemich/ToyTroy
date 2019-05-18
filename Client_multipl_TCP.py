@@ -5,7 +5,7 @@ import time
 path = ""
 def main():
     soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    host = "192.168.43.124"
+    host = "192.168.43.85"
     port = 1337
 
     try:
