@@ -3,11 +3,11 @@ import sys
 import traceback
 import glob
 from threading import Thread
-
+import threading
 
 #Threads=[]
 
-Threads_dict={'thread_ip':'command'}
+Threads_dict={}
 
 def main():
     start_server()
@@ -15,7 +15,7 @@ def main():
 
 def start_server():
     host = socket.gethostname()
-    host = '127.0.0.1'
+    #host = '127.0.0.1'
     port = 1337         # arbitrary non-privileged port
 
     soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -33,16 +33,17 @@ def start_server():
     is_active=True
     while is_active:
         command = input('enter a command: ')
+        print(Threads_dict)
         ip = input('which client?')
         Threads_dict[ip] = command
-        print(Threads_dict)
+        
 
     soc.close()
 
 
 def listening_thread(soc, max_query):
     soc.listen(max_query)       # queue up to 5 requests
-    print("Socket now listening")
+    print("Socket now listening\n")
     
 
      # infinite loop- do not reset for every requests
@@ -52,8 +53,8 @@ def listening_thread(soc, max_query):
         print("Connected with " + ip + ":" + port)
 
         try:
+            Threads_dict.update({ip:''})
             Thread(target=client_thread, args=(connection, ip, port), name=ip).start()
-            Threads_dict.update(ip='')
         except:
             print("Thread did not start.")
             traceback.print_exc()
@@ -63,32 +64,31 @@ def client_thread(connection, ip, port, max_buffer_size = 5120):
     is_active = True
 
     while is_active:
-        if(Threads_dict[ip]!=''):
-            print('ya poimal', ip, port)
+        if(Threads_dict.get(ip) != ''):
+            #client_input = receive_input(connection, max_buffer_size)
+            client_input = Threads_dict.get(ip)
+            print(client_input)
+            if "--quit--" in client_input:
+                print("Client is requesting to quit")
+                connection.close()
+                print("Connection " + ip + ":" + port + " closed")
+                is_active = False
+            elif("push" in client_input):
+                load_file(connection)
+                is_active = False
+            elif("ls" in client_input):
+                #здесь надо стопать главный тред а то уебищный вывод
+                connection.sendall('ls'.encode('utf-8'))
+                Threads_dict.update({ip:''})
+                print(connection.recv(1024).decode('utf-8'))
+            elif("pull" in client_input):
+                name = connection.recv(1024)
+                send_file(name, connection)
+                is_active = False
             
 
 
-        # client_input = receive_input(connection, max_buffer_size)
-        # print(client_input)
-        # if "--quit--" in client_input:
-        #     print("Client is requesting to quit")
-        #     connection.close()
-        #     print("Connection " + ip + ":" + port + " closed")
-        #     is_active = False
-        # elif("push" in client_input):
-        #     load_file(connection)
-        #     is_active = False
-        # elif("ls" in client_input):
-        #     g = glob.glob("*")
-        #     print(glob.glob("*"))
-        #     s = ""
-        #     for i in g:
-        #         s += i + '\n'
-        #     connection.sendall(s.encode('utf-8'))
-        # elif("pull" in client_input):
-        #     name = connection.recv(1024)
-        #     send_file(name, connection)
-        #     is_active = False
+        
 
 def load_file(c):
     print("Receiving...")
