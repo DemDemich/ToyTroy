@@ -32,6 +32,11 @@ def main():
             soc.close()
             #print("Connection " + ip + ":" + port + " closed")
             is_active = False
+        elif('scr' in client_input):
+            '''
+                here will be screenshot taker who will send file to server
+            '''
+            pass
         elif("push" in client_input):
             load_file(soc)
             is_active = False
@@ -45,7 +50,7 @@ def main():
         elif("pull" in client_input):
             name = soc.recv(1024)
             send_file(name, soc)
-            is_active = False
+            #is_active = False
 
 def load_file(c):
     print("Receiving...")
@@ -76,13 +81,17 @@ def send_file(fname, c):
     print("Done Sending")
 
 def receive_input(connection, max_buffer_size):
-    client_input = connection.recv(max_buffer_size)
-    print(client_input)
-    if(client_input):
-        decoded_input = client_input.decode("utf8")
-        return decoded_input
-    else:
-        return ''
+    try:
+        client_input = connection.recv(max_buffer_size)
+        print(client_input)
+        if(client_input):
+            decoded_input = client_input.decode("utf8")
+            return decoded_input
+        else:
+            return ''
+    except:
+        print("Подключение разорвано!")
+        quit()
         
 if __name__ == "__main__":
     main()
