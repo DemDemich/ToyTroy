@@ -92,7 +92,14 @@ def client_thread(connection, ip, port, max_buffer_size = 5120):
                     Threads_dict.update({ip:''})
                     print(connection.recv(1024).decode('utf-8'))
                     block_thread.notify_all()
-        
+            elif("cd" in client_input):
+                with block_thread:
+                    connection.sendall('cd'.encode('utf-8'))
+                    dire = input('Enter dir: ')
+                    connection.sendall(dire.encode('utf-8'))
+                    Threads_dict.update({ip:''})
+                    print(connection.recv(1024).decode('utf-8'))
+                    block_thread.notify_all()
             elif("pull" in client_input):
                 with block_thread:
                     connection.sendall('pull'.encode('utf-8'))
