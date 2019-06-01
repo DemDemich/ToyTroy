@@ -32,6 +32,13 @@ def start_server():
     while is_active:
         with block_thread:
             command = input('enter a command: ')
+
+            if(command=='quit'):
+                print("Quitting")
+               
+                is_active=False
+
+                    
             print(Threads_dict)
             print(threading.active_count())
             ip = input('which client?')
@@ -67,7 +74,7 @@ def client_thread(connection, ip, port, max_buffer_size = 5120):
             #client_input = receive_input(connection, max_buffer_size)
                 client_input = Threads_dict.get(ip)
                 print('command:' + client_input + ' for ' + ip)
-                if "--quit--" in client_input:
+                if "quit" in client_input:
                     print("Client is requesting to quit")
                     connection.close()
                     print("Connection " + ip + ":" + port + " closed")
@@ -83,7 +90,6 @@ def client_thread(connection, ip, port, max_buffer_size = 5120):
                         load_scr(fname, connection)
                         block_thread.notify_all()
                 elif("ls" in client_input):
-                    #здесь надо стопать главный тред а то уебищный вывод
                     with block_thread:
                         connection.sendall('ls'.encode('utf-8'))
                         Threads_dict.update({ip:''})
