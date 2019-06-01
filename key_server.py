@@ -47,7 +47,7 @@ def listening_thread(soc, max_query):
     soc.listen(max_query)       # queue up to 5 requests
     print("Socket now listening\n")
     
-
+    
      # infinite loop- do not reset for every requests
     while True:
         connection, address = soc.accept()

