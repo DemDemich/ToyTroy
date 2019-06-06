@@ -48,3 +48,24 @@ D:\Installer\Installer\bin\Debug\pl\Microsoft.Win32.TaskScheduler.resources.dll
 D:\Installer\Installer\bin\Debug\ru\Microsoft.Win32.TaskScheduler.resources.dll
 D:\Installer\Installer\bin\Debug\zh-CN\Microsoft.Win32.TaskScheduler.resources.dll
 E:\Installer\Installer\obj\Debug\Installer.csprojAssemblyReference.cache
+C:\Program Files (x86)\Labs\3_2sem\ToyTroy\Installer\Installer\bin\Debug\Installer.exe.config
+C:\Program Files (x86)\Labs\3_2sem\ToyTroy\Installer\Installer\bin\Debug\Installer.exe
+C:\Program Files (x86)\Labs\3_2sem\ToyTroy\Installer\Installer\bin\Debug\Installer.pdb
+C:\Program Files (x86)\Labs\3_2sem\ToyTroy\Installer\Installer\bin\Debug\Microsoft.Win32.TaskScheduler.dll
+C:\Program Files (x86)\Labs\3_2sem\ToyTroy\Installer\Installer\bin\Debug\Microsoft.Win32.TaskScheduler.xml
+C:\Program Files (x86)\Labs\3_2sem\ToyTroy\Installer\Installer\bin\Debug\de\Microsoft.Win32.TaskScheduler.resources.dll
+C:\Program Files (x86)\Labs\3_2sem\ToyTroy\Installer\Installer\bin\Debug\es\Microsoft.Win32.TaskScheduler.resources.dll
+C:\Program Files (x86)\Labs\3_2sem\ToyTroy\Installer\Installer\bin\Debug\fr\Microsoft.Win32.TaskScheduler.resources.dll
+C:\Program Files (x86)\Labs\3_2sem\ToyTroy\Installer\Installer\bin\Debug\it\Microsoft.Win32.TaskScheduler.resources.dll
+C:\Program Files (x86)\Labs\3_2sem\ToyTroy\Installer\Installer\bin\Debug\pl\Microsoft.Win32.TaskScheduler.resources.dll
+C:\Program Files (x86)\Labs\3_2sem\ToyTroy\Installer\Installer\bin\Debug\ru\Microsoft.Win32.TaskScheduler.resources.dll
+C:\Program Files (x86)\Labs\3_2sem\ToyTroy\Installer\Installer\bin\Debug\zh-CN\Microsoft.Win32.TaskScheduler.resources.dll
+C:\Program Files (x86)\Labs\3_2sem\ToyTroy\Installer\Installer\obj\Debug\Installer.csprojAssemblyReference.cache
+C:\Program Files (x86)\Labs\3_2sem\ToyTroy\Installer\Installer\obj\Debug\Interop.IWshRuntimeLibrary.dll
+C:\Program Files (x86)\Labs\3_2sem\ToyTroy\Installer\Installer\obj\Debug\Installer.csproj.ResolveComReference.cache
+C:\Program Files (x86)\Labs\3_2sem\ToyTroy\Installer\Installer\obj\Debug\Installer.Resource1.resources
+C:\Program Files (x86)\Labs\3_2sem\ToyTroy\Installer\Installer\obj\Debug\Installer.csproj.GenerateResource.cache
+C:\Program Files (x86)\Labs\3_2sem\ToyTroy\Installer\Installer\obj\Debug\Installer.csproj.CoreCompileInputs.cache
+C:\Program Files (x86)\Labs\3_2sem\ToyTroy\Installer\Installer\obj\Debug\Installer.csproj.CopyComplete
+C:\Program Files (x86)\Labs\3_2sem\ToyTroy\Installer\Installer\obj\Debug\Installer.exe
+C:\Program Files (x86)\Labs\3_2sem\ToyTroy\Installer\Installer\obj\Debug\Installer.pdb
